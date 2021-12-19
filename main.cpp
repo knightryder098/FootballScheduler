@@ -3,9 +3,10 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <algorithm>
 using namespace std;
 
-struct Team
+struct Team // user defined data structure for storing all the details.
 {
   int key;
   char name[100];
@@ -16,9 +17,9 @@ struct Team
   int matchesWon;
   int matchesLost;
 };
-char ScharSet[] = "abcdefghijklmnopqrstuvwxyz";
-char CcharSet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-Team TeamBook[16]; // Global Variable for storing all details about teams
+char ScharSet[] = "abcdefghijklmnopqrstuvwxyz"; // used to create random names
+char CcharSet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // used to create random names
+Team TeamBook[16];                              // Global Variable for storing all details about teams
 
 // randomizer function
 void randomizer(Team *A, int pos)
@@ -107,7 +108,7 @@ void displayDetails()
   printf("SL.no\tName\t\t\tSP\tWP\tTO\tPO\tMW\tML\n");
   for (int i = 0; *TeamBook[i].name != '\0'; i++)
   {
-    printf("%d\t%s\t\t%d\t%d\t%0.2f\t%0.2f\t%d\t%d",
+    printf("%d\t%s\t\t%d\t%d\t%0.2f\t%0.2f\t%d\t%d", // to display only 2point, we use %0.2f
            TeamBook[i].key + 1,
            TeamBook[i].name,
            TeamBook[i].strongPlayer,
@@ -120,8 +121,43 @@ void displayDetails()
   }
   getch();
 }
+// sorting function and its required functions
+bool sortbyplayer(Team *a, Team *b)
+{
+  return (a->strongPlayer > b->strongPlayer);
+}
+Team partition(team a[], int low, int high)
+{
+}
+void customSort(Team a[], int low, int high)
+{
+  if (low < high)
+  {
+    int pi = partion(a, low, high);
+    customSort(a, low, pi - 1);
+    customSort(a, pi + 1, high);
+  }
+}
+////////////////////////////////////////////////////////////////////////////
 // void DisplayResults();
-// void schedulerMatches();
+void schedulerMatches()
+{
+  int teams = 0;
+  for (teams; *TeamBook[teams].name != '\0'; teams++)
+    ;
+  if (teams % 2 == 0)
+  {
+    // even no of teams
+    printf("EVEN");
+    customSort(TeamBook, 0, teams - 1);
+  }
+  else
+  {
+    // odd number of teams
+    printf("ODD");
+  }
+  getch();
+}
 int main()
 {
   while (1)
@@ -144,8 +180,8 @@ int main()
       displayDetails();
       break;
     case 3:
-      printf("Hello\n");
-      // schedulerMatches();
+      // printf("Hello\n");
+      schedulerMatches();
       break;
     case 4:
       printf("Hello\n");

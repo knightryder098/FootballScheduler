@@ -1,2 +1,4 @@
 1.How to sort a user defined structure in C with only basic function ?
-  ->
+  -> https://www.geeksforgeeks.org/c-program-to-store-student-records-as-structures-and-sort-them-by-name/
+
+2.
