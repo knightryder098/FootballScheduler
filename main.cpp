@@ -129,19 +129,65 @@ int sortbyplayer(const void *p, const void *q)
 
 ////////////////////////////////////////////////////////////////////////////
 // void DisplayResults();
+Team match(Team a, Team b)
+{
+  // return winner of both teams based on their properties
+  Team wwinner;
+  float winpercentageA = (a.teamOpinion + a.publicOpinion);
+  float winpercentageB = (b.publicOpinion + b.teamOpinion);
+  float losepercentageA = (rand() % 200) + 1;
+  float losepercentageB = (rand() % 200) + 1;
+
+  if (wi)
+}
+void matchMakerKnockout(Team a[], int size)
+{
+  // Knockout Matches
+  int roundNumber = 4 - log2(size);
+  if (size == 1)
+    return;
+  int currpos = 0;
+  Team currentRound[size / 2];
+  for (int i = 0; i < size; i += 2)
+  {
+    currentRound[currpos] = match(a[i], a[i + 1]);
+  }
+  printf("%d ROUND\n*****************\n", roundNumber + 1);
+  printf("\tName\t\t\tSP\tWP\tTO\tPO\tMW\tML\n");
+  for (int i = 0; i < currpos; i++)
+  {
+    printf("\t%s\t\t%d\t%d\t%0.2f\t%0.2f\t%d\t%d", // to display only 2point, we use %0.2f
+           currentRound[i].name,
+           currentRound[i].strongPlayer,
+           currentRound[i].weakPlayer,
+           currentRound[i].teamOpinion,
+           currentRound[i].publicOpinion,
+           currentRound[i].matchesWon,
+           currentRound[i].matchesLost);
+    printf("\n");
+  }
+}
+
+void matchMakerLeague(Team a[])
+{
+  // Leauge matches
+}
 void schedulerMatches()
 {
   int teams = 0;
   for (teams; *TeamBook[teams].name != '\0'; teams++)
     ;
+  qsort(TeamBook, teams, sizeof(Team), sortbyplayer);
   if (teams % 2 == 0)
   {
     // even no of teams
-    qsort(TeamBook, teams, sizeof(Team), sortbyplayer);
+    printf("\t As the number of teams are even and power of Two\n\tMatch TYPE: KNOCKOUT\n");
+    matchMakerKnockout(TeamBook, teams);
   }
   else
   {
     // odd number of teams
+    matchMakerLeague(TeamBook);
   }
   getch();
 }
