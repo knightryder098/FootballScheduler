@@ -122,22 +122,11 @@ void displayDetails()
   getch();
 }
 // sorting function and its required functions
-bool sortbyplayer(Team *a, Team *b)
+int sortbyplayer(const void *p, const void *q)
 {
-  return (a->strongPlayer > b->strongPlayer);
+  return ((struct Team *)p)->strongPlayer < ((struct Team *)q)->strongPlayer;
 }
-Team partition(team a[], int low, int high)
-{
-}
-void customSort(Team a[], int low, int high)
-{
-  if (low < high)
-  {
-    int pi = partion(a, low, high);
-    customSort(a, low, pi - 1);
-    customSort(a, pi + 1, high);
-  }
-}
+
 ////////////////////////////////////////////////////////////////////////////
 // void DisplayResults();
 void schedulerMatches()
@@ -148,13 +137,11 @@ void schedulerMatches()
   if (teams % 2 == 0)
   {
     // even no of teams
-    printf("EVEN");
-    customSort(TeamBook, 0, teams - 1);
+    qsort(TeamBook, teams, sizeof(Team), sortbyplayer);
   }
   else
   {
     // odd number of teams
-    printf("ODD");
   }
   getch();
 }
