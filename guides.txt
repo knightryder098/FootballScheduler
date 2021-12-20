@@ -5,4 +5,7 @@
   ->https://www.geeksforgeeks.org/comparator-function-of-qsort-in-c/
   ->https://www.cplusplus.com/reference/cstdlib/qsort/
 
-3.
+3.All the team members will be sorted according to the TeamOpinion in descending order
+
+4.
+
