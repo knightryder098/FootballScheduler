@@ -16,43 +16,30 @@ struct Team // user defined data structure for storing all the details.
   int strongPlayer;
   int weakPlayer;
   float teamOpinion;
-  float publicOpinion;
-  int matchesWon;
-  int matchesLost;
 };
+Team TeamBook[16];                              // Global Variable for storing all details about teams
 char ScharSet[] = "abcdefghijklmnopqrstuvwxyz"; // used to create random names
 char CcharSet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // used to create random names
-Team TeamBook[16];                              // Global Variable for storing all details about teams
+int m;
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-// randomizer function
 void randomizer(Team *A, int pos)
 {
   A->key = pos;
   char name[10];
-  int index = (rand() % 25) + 1;
+  int index = (rand() % 24) + 1;
   name[0] = CcharSet[index];
-  for (int i = 1; i < 10; i++)
+  for (int i = 1; i < 9; i++)
   {
-    index = (rand() % 25) + 1;
+    index = (rand() % 24) + 1;
     name[i] = ScharSet[index];
   }
   strcpy(A->name, name);
   A->strongPlayer = (rand() % 9) + 1;
   A->weakPlayer = 11 - A->strongPlayer;
   A->teamOpinion = (double)(A->strongPlayer * 100) / 11;
-  A->publicOpinion = (double)((rand() % 100) + 1);
-  A->matchesWon = 0;
-  A->matchesLost = 0;
   return;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-// function to enter details by yourself
 void entryYourself(int size)
 {
   for (int i = 0; i < size; i++)
@@ -60,18 +47,14 @@ void entryYourself(int size)
     char name[10];
     system("cls");
     TeamBook[i].key = i + 1;
-    printf("Enter details of %d team mmenber\n");
+    printf("Enter details of %d team member\n", i + 1);
     printf("\tEnter the name of team\n");
     scanf(" %s", &name);
     strcpy(TeamBook[i].name, name);
-    printf("\tEnter no of string players\n");
+    printf("\tEnter no of strong players\n");
     scanf(" %d", &TeamBook[i].strongPlayer);
-    printf("\tEnter no Public Opinion \n");
-    scanf(" %f", &TeamBook[i].publicOpinion);
     TeamBook[i].weakPlayer = 11 - TeamBook[i].strongPlayer;
     TeamBook[i].teamOpinion = (double)(TeamBook[i].strongPlayer * 100) / 11;
-    TeamBook[i].matchesWon = 0;
-    TeamBook[i].matchesLost = 0;
   }
 }
 // function to enter details by computer itself
@@ -85,12 +68,11 @@ void entryComputer(int size)
 // Details Entry
 void enterDetails()
 {
-  int a;
   system("cls");
   printf("\tEnter the number of teams ( Power of 2 ) and below 16 only !\n");
-  scanf("%d", &a);
-  printf("%d", a);
-  if (log2(a) <= 4)
+  scanf("%d", &m);
+  printf("%d", m);
+  if (m <= 16)
   {
     char ch;
     system("cls");
@@ -100,11 +82,13 @@ void enterDetails()
     printf("%c", ch);
     switch (ch)
     {
+    case 'y':
     case 'Y':
-      entryYourself(a);
+      entryYourself(m);
       break;
+    case 'c':
     case 'C':
-      entryComputer(a);
+      entryComputer(m);
       break;
     default:
       printf("Invalid input\n\tEXITING!!! .....\n");
@@ -112,159 +96,35 @@ void enterDetails()
     }
   }
   else
-    printf("Can't Scheduled matches for %d numbers of teams\n", a);
+    printf("Can't Scheduled matches for %d numbers of teams\n", m);
   return;
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-void displayDetails(Team a[])
+void displayDetails(Team a[], int size)
 {
   int teams = 0;
 
-  printf("SL.no\tName\t\t\tSP\tWP\tTO\tPO\tMW\tML\n");
-  for (int i = 0; *a[i].name != '\0'; i++)
+  printf("\t\nSL.no\tName\t\t\tSP\tWP\tTO\n");
+  for (int i = 0; i < size; i++)
   {
-    printf("%d\t%s\t\t%d\t%d\t%0.2f\t%0.2f\t%d\t%d", // to display only 2point, we use %0.2f
-           TeamBook[i].key + 1,
-           TeamBook[i].name,
-           TeamBook[i].strongPlayer,
-           TeamBook[i].weakPlayer,
-           TeamBook[i].teamOpinion,
-           TeamBook[i].publicOpinion,
-           TeamBook[i].matchesWon,
-           TeamBook[i].matchesLost);
+    printf("%d\t%s\t\t%d\t%d\t%0.2f", // to display only 2point, we use %0.2f
+           a[i].key + 1,
+           a[i].name,
+           a[i].strongPlayer,
+           a[i].weakPlayer,
+           a[i].teamOpinion);
     printf("\n");
   }
   getch();
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-// sorting function and its required functions
-int sortbyplayer(const void *p, const void *q)
-{
-  return ((struct Team *)p)->strongPlayer < ((struct Team *)q)->strongPlayer;
 }
 
 int sortbyteamOpinion(const void *p, const void *q)
 {
   return ((struct Team *)p)->teamOpinion < ((struct Team *)q)->teamOpinion;
 }
-// Team match(Team a, Team b)
-// {
-//   // return winner of both teams based on their properties
-//   Team wwinner;
-//   float winpercentageA = (a.teamOpinion + a.publicOpinion);
-//   float winpercentageB = (b.publicOpinion + b.teamOpinion);
-//   float losepercentageA = (rand() % 200) + 1;
-//   float losepercentageB = (rand() % 200) + 1;
 
-//   if (winpercentageA > winpercentageB && losepercentageA < losepercentageB)
-//   {
-//     a.matchesWon++;
-//     a.teamOpinion += (a.teamOpinion * 0.02);
-//     a.publicOpinion += (a.publicOpinion * 0.02);
-//     wwinner = a;
-//   }
-//   else if (losepercentageA < losepercentageB)
-//   {
-//     a.matchesWon++;
-//     a.teamOpinion += (a.teamOpinion * 0.02);
-//     a.publicOpinion += (a.publicOpinion * 0.02);
-//     wwinner = a;
-//   }
-//   else
-//   {
-//     b.matchesWon++;
-//     b.teamOpinion += (b.teamOpinion * 0.02);
-//     b.publicOpinion += (b.publicOpinion * 0.02);
-//     wwinner = b;
-//   }
-//   return wwinner;
-// }
-// void matchMakerKnockout(Team a[], int size, bool flag)
-// {
-//   // Knockout Matches
-//   if (size == 1)
-//   {
-//     return;
-//   }
-//   int teams = 0;
-//   for (teams; *a[teams].name != '\0'; teams++)
-//     ;
-//   qsort(a, teams, sizeof(Team), sortbyplayer);
-//   int roundNumber = 4 - log2(size);
-//   int i;
-//   if (flag)
-//     i = 1;
-//   else
-//     i = 0;
-//   int currpos = 0;
-//   Team currentRound[size / 2];
-//   for (i; i < size; i += 2)
-//   {
-//     currentRound[currpos] = match(a[i], a[i + 1]);
-//   }
-//   printf("\t%d ROUND\n*****************\n", roundNumber + 1);
-//   displayDetails(currentRound);
-// }
+void schedulerMatches(Team[], int, int);
 
-// void schedulerMatches()
-// {
-//   bool flag = false;
-//   int teams = 0;
-//   for (teams; *TeamBook[teams].name != '\0'; teams++)
-//     ;
-//   qsort(TeamBook, teams, sizeof(Team), sortbyplayer);
-//   if (teams % 2 == 0)
-//   {
-//     flag = false;
-//     // even no of teams
-//     // printf("\t As the number of teams are even and power of Two\n\tMatch TYPE: KNOCKOUT\n");
-//     matchMakerKnockout(TeamBook, teams, flag);
-//   }
-//   else
-//   {
-//     // odd number of teams
-//     flag = true;
-//     matchMakerKnockout(TeamBook, teams, flag);
-//   }
-//   // getch();
-// }
-
-void match(Team *a, Team *b)
-{
-}
-
-void schedulerMatches(Team *Current[])
-{
-  int teams = 0;
-  for (teams; *Current[teams].name != '\0'; teams++)
-    ;
-  qsort(Current, teams, sizeof(Team), sortbyteamOpinion);
-  if (teams % 2 == 0)
-  {
-    // even
-    printf("\tAs Even number of teams are present , no BYE is given!!!\n");
-    for (int i = 0; i < teams / 2; i++)
-    {
-      printf("\tALL ROUND %d MATCHES\n", i + 1);
-      {
-      }
-    }
-  }
-  else
-  {
-    // odd
-  }
-}
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////
 int main()
 {
   while (1)
@@ -280,16 +140,17 @@ int main()
     switch (choice)
     {
     case 1:
+      memset(TeamBook, 0, sizeof(TeamBook));
       enterDetails();
       break;
     case 2:
     {
-      displayDetails(TeamBook);
+
+      displayDetails(TeamBook, m);
     }
     break;
     case 3:
-      printf("Hello\n");
-      schedulerMatches(&TeamBook);
+      schedulerMatches(TeamBook, 0, m);
       break;
     default:
     {
@@ -302,5 +163,97 @@ int main()
   return 0;
 }
 
-///////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
+void schedulerMatches(Team a[], int round, int size)
+{
+  if (size == 1) // last case,exit after this
+  {
+    printf("\t\n**********%s wins the tournament**********\n", a[0].name);
+    return;
+  }
+  else
+  {
+    qsort(a, size, sizeof(Team), sortbyteamOpinion);
+    displayDetails(a, size);
+    printf("\t\n********************\n\tROUND %d !!!!!!\n********************\n", round + 1);
+    int dd = 0;
+    if (size % 2 == 0)
+      dd = size / 2;
+    else
+      dd = ceil((double)size / 2);
+    Team newTeamBook[dd];
+    memset(newTeamBook, 0, sizeof(newTeamBook));
+    int x = 0;
+    if (size % 2 == 0)
+    {
+      for (int i = 0; i < size; i += 2)
+      {
+        printf("\t\n\n%s vs %s", a[i].name, a[i + 1].name);
+        if ((rand() % 2) == 0)
+        {
+          printf("\t\n%s wins.\n", a[i].name);
+          newTeamBook[x] = a[i];
+          newTeamBook[x].strongPlayer = rand() % 9;
+          newTeamBook[x].weakPlayer = 11 - newTeamBook[x].strongPlayer;
+          newTeamBook[x].teamOpinion = (double)(newTeamBook[x].strongPlayer * 100) / 11;
+          x++;
+        }
+        else
+        {
+          printf("\t\n%s wins.\n", a[i + 1].name);
+          newTeamBook[x] = a[i + 1];
+          newTeamBook[x].strongPlayer = rand() % 9;
+          newTeamBook[x].weakPlayer = 11 - newTeamBook[x].strongPlayer;
+          newTeamBook[x].teamOpinion = (double)(newTeamBook[x].strongPlayer * 100) / 11;
+          x++;
+        }
+        // start here , here you have to match two
+        // teams and store them in newly created
+        // array i.e newTeamBook
+        //
+      }
+    }
+    else
+    {
+      newTeamBook[x] = a[0]; // team qualifies to next round
+      newTeamBook[x].strongPlayer = rand() % 9;
+      newTeamBook[x].weakPlayer = 11 - newTeamBook[x].strongPlayer;
+      newTeamBook[x].teamOpinion = (double)(newTeamBook[x].strongPlayer * 100) / 11;
+      x++;
+
+      for (int i = 1; i < size; i += 2)
+      {
+        if (x > dd - 1)
+          break;
+        printf("\t\n\n%s vs %s", a[i].name, a[i + 1].name);
+        if ((rand() % 2) == 0)
+        {
+          printf("\t\n%s wins.\n", a[i].name);
+          newTeamBook[x] = a[i];
+          newTeamBook[x].strongPlayer = rand() % 9;
+          newTeamBook[x].weakPlayer = 11 - newTeamBook[x].strongPlayer;
+          newTeamBook[x].teamOpinion = (double)(newTeamBook[x].strongPlayer * 100) / 11;
+          x++;
+        }
+        else
+        {
+          printf("\t\n%s wins.\n", a[i + 1].name);
+          newTeamBook[x] = a[i + 1];
+          newTeamBook[x].strongPlayer = rand() % 9;
+          newTeamBook[x].weakPlayer = 11 - newTeamBook[x].strongPlayer;
+          newTeamBook[x].teamOpinion = (double)(newTeamBook[x].strongPlayer * 100) / 11;
+          x++;
+        }
+      }
+    }
+
+    schedulerMatches(newTeamBook, round + 1, dd);
+    memset(newTeamBook, 0, sizeof(newTeamBook));
+    // after creation of newlyTeamBook
+    // pass that array in
+    // schedulermatches() function
+    // it will run until size of team is 1.
+  }
+
+  getch();
+  return;
+}
